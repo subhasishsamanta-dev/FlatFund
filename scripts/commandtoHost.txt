@@ -1,0 +1,108 @@
+
+npx netlify link will connect this folder to a project on Netlify
+
+? How do you want to link this folder to a project? 
+❯ Search by full or partial project name 
+  Choose from a list of your recently updated projects 
+  Enter a project ID 
+bit1148@bit1005:~/Downloads/flatfund0710Updated$ npx netlify-cli link
+
+npx netlify link will connect this folder to a project on Netlify
+
+? How do you want to link this folder to a project? Enter a project ID
+? What is the project ID? d328e73c-bb03-4842-a36f-a006e99f9942
+
+Directory Linked
+
+Admin url: https://app.netlify.com/projects/flatfund
+Project url:  https://flatfund.com
+
+You can now run other `netlify` cli commands in this directory
+bit1148@bit1005:~/Downloads/flatfund0710Updated$ npx netlify-cli deploy --prod --dir=dist/spa
+
+Netlify Build                                                 
+────────────────────────────────────────────────────────────────
+
+❯ Version
+  @netlify/build 35.5.10
+
+❯ Flags
+  accountId: 694002cb5e6c9a4e23ae838d
+  deployId: 69785d914c26b06e036902d2
+
+❯ Current directory
+  /home/bit1148/Downloads/flatfund0710Updated
+
+❯ Config file
+  /home/bit1148/Downloads/flatfund0710Updated/netlify.toml
+
+❯ Context
+  production
+
+build.command from netlify.toml                               
+────────────────────────────────────────────────────────────────
+
+$ npm run build:client
+
+> build:client
+> vite build
+
+vite v7.1.9 building for production...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+✓ 2498 modules transformed.
+dist/spa/index.html                     1.15 kB │ gzip:   0.56 kB
+dist/spa/assets/index-DApnvTge.css     70.17 kB │ gzip:  12.34 kB
+dist/spa/assets/index-CpL-qp_w.js   1,682.97 kB │ gzip: 438.65 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 11.66s
+
+(build.command completed in 12.7s)
+
+Functions bundling                                            
+────────────────────────────────────────────────────────────────
+
+Packaging Functions from netlify/functions directory:
+ - api.ts
+
+
+(Functions bundling completed in 1.8s)
+
+Deploying to Netlify
+────────────────────────────────────────────────────────────────
+
+Deploy path:        /home/bit1148/Downloads/flatfund0710Updated/dist/spa
+Functions path:     /home/bit1148/Downloads/flatfund0710Updated/netlify/functions
+Configuration path: /home/bit1148/Downloads/flatfund0710Updated/netlify.toml
+
+✔ Finished uploading blobs to deploy store
+✔ Deploying functions from cache (use --skip-functions-cache to override)
+✔ Finished hashing 13 files and 1 functions
+✔ CDN requesting 5 files and 1 functions
+✔ Finished uploading 6 assets
+✔ Deploy is live!
+
+Netlify Build Complete                                        
+────────────────────────────────────────────────────────────────
+
+(Netlify Build completed in 39.3s)
+
+🚀 Deploy complete
+────────────────────────────────────────────────────────────────
+
+   ╭───────────────────────── ⬥  Production deploy is live ⬥  ─────────────────────────╮
+   │                                                                                   │
+   │                 Deployed to production URL: https://flatfund.com                  │
+   │                                                                                   │
+   │       Unique deploy URL: https://69785d914c26b06e036902d2--flatfund.netlify.app   │
+   │                                                                                   │
+   ╰───────────────────────────────────────────────────────────────────────────────────╯
+
+Build logs:         https://app.netlify.com/projects/flatfund/deploys/69785d914c26b06e036902d2
+Function logs:      https://app.netlify.com/projects/flatfund/logs/functions
+Edge function Logs: https://app.netlify.com/projects/flatfund/logs/edge-functions
+bit1148@bit1005:~/Downloads/flatfund0710Updated$  
+ *  History restored 

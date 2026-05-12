@@ -1,0 +1,75 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: check if the requesting user is authenticated
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    // Helper: check if the requesting user is an admin
+    function isAdmin() {
+      return isAuth() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read: if isAuth();
+      // A user can update their own profile; admins can update any profile
+      allow write: if isAuth() && (request.auth.uid == userId || isAdmin());
+    }
+
+    // Deposits — any authenticated user can add; admins can edit/delete
+    match /deposits/{depositId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update, delete: if isAdmin();
+    }
+
+    // Expenses — any authenticated user can add; admins can edit/delete
+    match /expenses/{expenseId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update, delete: if isAdmin() || request.auth.uid == resource.data.uid;
+    }
+
+    // Bills — only admins can create/update/delete; all members can read
+    match /bills/{billId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // Reimbursements — any authenticated user can create; admins can update
+    match /reimbursements/{reimbId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update, delete: if isAdmin();
+    }
+
+    // Settings (app-wide config) — readable by all, writable only by admins
+    match /settings/{settingId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // Archived months — readable by all, writable only by admins
+    match /archivedMonths/{archiveId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // Cooking Schedules — readable by all members, writable only by admins
+    match /cookingSchedules/{monthId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // Notifications — readable/writable by the owning user + admins
+    match /notifications/{notifId} {
+      allow read, write: if isAuth();
+    }
+  }
+}

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Flat Fund</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/logo-minimal.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#09090b" />
+  <meta name="msapplication-TileColor" content="#09090b" />
+
+  <!-- iOS PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <!-- Use 'black' (not black-translucent) to prevent white flash on iOS -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="Flat Fund" />
+
+  <!-- iOS Touch Icons (prevents white-box splash) -->
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="/logo-minimal.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
+  <link rel="apple-touch-icon" sizes="167x167" href="/logo.png" />
+
+  <!-- Inline splash background to eliminate white flash -->
+  <style>
+    html,
+    body,
+    #root {
+      background-color: #09090b;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div id="root"></div>
+
+  <script type="module" src="/client/App.tsx"></script>
+</body>
+
+</html>

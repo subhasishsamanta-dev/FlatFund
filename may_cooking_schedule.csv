@@ -1,0 +1,22 @@
+date,day,morning_team,night_team
+2026-05-11,Monday,Team C,Team A
+2026-05-12,Tuesday,Team A,Team B
+2026-05-13,Wednesday,Team B,Team C
+2026-05-14,Thursday,Team C,Team A
+2026-05-15,Friday,Team A,All Teams
+2026-05-16,Saturday,All Teams,All Teams
+2026-05-17,Sunday,All Teams,All Teams
+2026-05-18,Monday,Team B,Team C
+2026-05-19,Tuesday,Team C,Team A
+2026-05-20,Wednesday,Team A,Team B
+2026-05-21,Thursday,Team B,Team C
+2026-05-22,Friday,Team C,All Teams
+2026-05-23,Saturday,All Teams,All Teams
+2026-05-24,Sunday,All Teams,All Teams
+2026-05-25,Monday,Team A,Team B
+2026-05-26,Tuesday,Team B,Team C
+2026-05-27,Wednesday,Team C,Team A
+2026-05-28,Thursday,Team A,Team B
+2026-05-29,Friday,Team B,All Teams
+2026-05-30,Saturday,All Teams,All Teams
+2026-05-31,Sunday,All Teams,All Teams
