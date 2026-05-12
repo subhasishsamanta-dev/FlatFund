@@ -217,7 +217,7 @@ async function sendToAllUsers(notification: {
 /**
  * Sends a notification to a SINGLE user (by userId) — FCM + Web Push.
  */
-async function sendToUser(
+export async function sendToUser(
     userId: string,
     notification: {
         title: string;

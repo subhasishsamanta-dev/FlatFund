@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import admin from "firebase-admin";
+import { sendToUser } from "../services/notificationService";
 
 // Initialize Firebase Admin if not already initialized
 if (!admin.apps.length) {
@@ -134,22 +135,22 @@ export const handleSendTestPush = async (req: Request, res: Response) => {
         }
 
         let successCount = 0;
-        if (fcmTokens.length > 0) {
-            const message: admin.messaging.MulticastMessage = {
-                tokens: fcmTokens,
-                notification: {
-                    title: title || "Test Notification",
-                    body: body || "If you're reading this, push notifications are working!",
-                },
-                android: { priority: "high" },
-                webpush: { headers: { Urgency: "high" } },
-            };
-            const response = await admin.messaging().sendEachForMulticast(message);
-            successCount += response.successCount;
+        
+        // Use the unified notification service (FCM + Web Push)
+        try {
+            await sendToUser(userId, {
+                title: title || "Test Notification 🔔",
+                body: body || "If you're reading this, FlatFund push notifications are working perfectly!",
+                clickUrl: "/profile",
+                tag: "test-notification"
+            });
+            successCount = 1; // Service doesn't return count, but we assume 1 delivery attempt
+        } catch (err) {
+            console.error("[push] Service send failed:", err);
         }
 
         res.status(200).json({ 
-            message: `Test notification sent. Success: ${successCount}`,
+            message: `Test notification attempt complete.`,
             tokensFound: fcmTokens.length,
             webPushSubscribed: !!webPushSub?.endpoint
         });
