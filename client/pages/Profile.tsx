@@ -38,7 +38,8 @@ import {
   Eye,
   EyeOff,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  Bell
 } from "lucide-react";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useAppState } from "@/state/AppState";
