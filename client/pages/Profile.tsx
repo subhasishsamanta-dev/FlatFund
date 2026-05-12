@@ -48,6 +48,7 @@ import { useBills } from "@/hooks/useBills";
 import { useFirestoreUsers } from "@/hooks/useFirestoreUsers";
 import { toast } from "sonner";
 import { haptics } from "@/lib/haptics";
+import { getPushRegistrationStatus } from "@/lib/notifications";
 
 
 export default function Profile() {
@@ -409,6 +410,7 @@ export default function Profile() {
                 <TabsTrigger value="security">Security</TabsTrigger>
                 <TabsTrigger value="activity">Activity</TabsTrigger>
                 <TabsTrigger value="statistics">Statistics</TabsTrigger>
+                <TabsTrigger value="push">Push Status</TabsTrigger>
               </TabsList>
 
               {/* Personal Information */}
@@ -664,6 +666,112 @@ export default function Profile() {
                     </CardContent>
                   </Card>
                 </div>
+              </TabsContent>
+
+              {/* Push Notification Status */}
+              <TabsContent value="push" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Bell className="h-5 w-5" />
+                      Push Notification Setup
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-4">
+                      {/* Status Indicators */}
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="p-4 border rounded-lg flex items-center justify-between">
+                          <div>
+                            <div className="text-sm font-medium text-muted-foreground">Permission</div>
+                            <div className="text-lg font-bold">
+                              {Notification.permission === 'granted' ? (
+                                <span className="text-green-600 flex items-center gap-1">
+                                  <CheckCircle className="h-4 w-4" /> Granted
+                                </span>
+                              ) : Notification.permission === 'denied' ? (
+                                <span className="text-red-600 flex items-center gap-1">
+                                  <AlertCircle className="h-4 w-4" /> Denied
+                                </span>
+                              ) : (
+                                <span className="text-orange-600 flex items-center gap-1">
+                                  <AlertCircle className="h-4 w-4" /> Default
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="p-4 border rounded-lg flex items-center justify-between">
+                          <div>
+                            <div className="text-sm font-medium text-muted-foreground">Server Registration</div>
+                            <div className="text-lg font-bold">
+                              {getPushRegistrationStatus(String(userData.id || (userData as any).uid)) ? (
+                                <span className="text-green-600 flex items-center gap-1">
+                                  <CheckCircle className="h-4 w-4" /> Active
+                                </span>
+                              ) : (
+                                <span className="text-orange-600 flex items-center gap-1">
+                                  <AlertCircle className="h-4 w-4" /> Pending
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      {/* Diagnostic Info */}
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-medium">Why am I not getting notifications?</h4>
+                        <ul className="text-sm text-muted-foreground space-y-1 list-disc pl-4">
+                          <li><strong>iOS Support:</strong> You MUST add this app to your Home Screen to receive push notifications on iPhone.</li>
+                          <li><strong>Permissions:</strong> Ensure you allowed notifications when prompted by your browser.</li>
+                          <li><strong>PWA:</strong> Notifications work best when the app is installed as a PWA.</li>
+                          <li><strong>DND:</strong> Check if "Do Not Disturb" or "Focus" mode is active on your device.</li>
+                        </ul>
+                      </div>
+
+                      <div className="pt-4 flex gap-3">
+                        <Button
+                          className="flex-1"
+                          onClick={async () => {
+                            const userId = userData.id || (userData as any).uid;
+                            if (!userId) return;
+
+                            try {
+                              const res = await fetch('/api/push/test', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ userId })
+                              });
+                              const data = await res.json();
+                              if (res.ok) {
+                                toast.success(data.message || "Test notification triggered!");
+                                if (data.tokensFound === 0) {
+                                   toast.warning("No tokens found. Try refreshing the page to re-register.");
+                                }
+                              } else {
+                                toast.error(data.message || "Failed to trigger test notification");
+                              }
+                            } catch (e) {
+                              toast.error("Network error while testing notifications");
+                            }
+                          }}
+                        >
+                          Send Test Notification
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={() => window.location.reload()}
+                        >
+                            Refresh Registration
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </TabsContent>
             </Tabs>
           </div>

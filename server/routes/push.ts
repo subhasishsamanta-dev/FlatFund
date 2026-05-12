@@ -79,7 +79,6 @@ export const handleSendPush = async (req: Request, res: Response) => {
     const { title, body } = req.body;
 
     try {
-        // Get all users with FCM tokens
         const usersSnapshot = await db.collection('users').get();
         let totalSent = 0;
 
@@ -95,28 +94,8 @@ export const handleSendPush = async (req: Request, res: Response) => {
                     title: title || "New Notification",
                     body: body || "You have a new message from FlatFund!",
                 },
-                data: {
-                    type: "direct_push",
-                    icon: "/logo.svg",
-                },
-                android: {
-                    priority: "high",
-                    notification: {
-                        color: "#0DA9AF"
-                    }
-                },
-                webpush: {
-                    headers: {
-                        Urgency: "high",
-                    },
-                    notification: {
-                        icon: "/logo.svg",
-                        actions: [
-                            { action: "view", title: "View Details" },
-                            { action: "close", title: "Close" }
-                        ]
-                    }
-                },
+                android: { priority: "high" },
+                webpush: { headers: { Urgency: "high" } },
             };
 
             const response = await admin.messaging().sendEachForMulticast(message);
@@ -127,5 +106,55 @@ export const handleSendPush = async (req: Request, res: Response) => {
     } catch (error) {
         console.error("Error sending push notification:", error);
         res.status(500).json({ message: "Failed to send notifications" });
+    }
+};
+
+export const handleSendTestPush = async (req: Request, res: Response) => {
+    const { userId, title, body } = req.body;
+
+    if (!userId) {
+        res.status(400).json({ message: "userId is required" });
+        return;
+    }
+
+    try {
+        const userDoc = await db.collection('users').doc(userId).get();
+        if (!userDoc.exists) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+
+        const userData = userDoc.data();
+        const fcmTokens: string[] = userData?.fcmTokens || [];
+        const webPushSub = userData?.webPushSubscription;
+
+        if (fcmTokens.length === 0 && (!webPushSub || !webPushSub.endpoint)) {
+            res.status(400).json({ message: "No push tokens found for this user. Ensure notifications are allowed." });
+            return;
+        }
+
+        let successCount = 0;
+        if (fcmTokens.length > 0) {
+            const message: admin.messaging.MulticastMessage = {
+                tokens: fcmTokens,
+                notification: {
+                    title: title || "Test Notification",
+                    body: body || "If you're reading this, push notifications are working!",
+                },
+                android: { priority: "high" },
+                webpush: { headers: { Urgency: "high" } },
+            };
+            const response = await admin.messaging().sendEachForMulticast(message);
+            successCount += response.successCount;
+        }
+
+        res.status(200).json({ 
+            message: `Test notification sent. Success: ${successCount}`,
+            tokensFound: fcmTokens.length,
+            webPushSubscribed: !!webPushSub?.endpoint
+        });
+    } catch (error: any) {
+        console.error("Error sending test push:", error);
+        res.status(500).json({ message: "Failed to send test notification", error: error.message });
     }
 };

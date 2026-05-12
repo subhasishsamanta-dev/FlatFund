@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
-import { handleSubscribe, handleSendPush, handleGetPushKey } from "./routes/push";
+import { handleSubscribe, handleSendPush, handleGetPushKey, handleSendTestPush } from "./routes/push";
 
 import { handleCreateDeposit, handleCreateExpense } from "./routes/transactions";
 import { handleCreateBill } from "./routes/bills";
@@ -28,6 +28,7 @@ export function createServer() {
   app.get("/api/push/key", handleGetPushKey);
   app.post("/api/push/subscribe", handleSubscribe);
   app.post("/api/push/send", handleSendPush);
+  app.post("/api/push/test", handleSendTestPush);
 
   // Transaction routes (deposits, expenses)
   app.post("/api/deposits", handleCreateDeposit);

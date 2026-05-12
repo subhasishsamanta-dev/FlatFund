@@ -231,3 +231,9 @@ export const registerPushNotifications = async (userId: string) => {
         console.error("[notifications] Error setting up push notifications:", error);
     }
 };
+/**
+ * Returns whether the current user is registered for push notifications.
+ */
+export const getPushRegistrationStatus = (userId: string) => {
+    return _registeredUids.has(userId);
+};
